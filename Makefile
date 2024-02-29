@@ -61,16 +61,16 @@ all: 40image ppmdiff
 
 ## Linking step (.o -> executable program)
 
-unit_test: unit_test.o RGB_component.o image.o uarray2.o a2plain.o #a2blocked.o
+unit_test: unit_test.o RGB_component.o image.o uarray2.o a2plain.o calculations.o CV_to_DCT.o
 	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
-40image: 40image.o compression.o image.o uarray2.o a2plain.o RGB_component.o
-		$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
+40image: 40image.o compression.o image.o uarray2.o a2plain.o RGB_component.o calculations.o CV_to_DCT.o
+	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
 ppmdiff: ppmdiff.o a2plain.o uarray2.o
 	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
 
 clean:
-	rm -f ppmdiff image *.o
+	rm -f ppmdiff 40image *.o
 

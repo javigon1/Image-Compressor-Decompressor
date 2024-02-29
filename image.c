@@ -40,7 +40,7 @@ Pnm_ppm readImagePpm(FILE *fp, A2Methods_T methods)
 
         image->pixels = new_image;
         methods->free(&(image->pixels));
-        
+        Pnm_ppmfree(&image);
         
         return new_image;
 }       

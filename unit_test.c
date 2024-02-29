@@ -1,7 +1,7 @@
 #include "unit_test.h"
 
 int main(){
-        testYPBPR();
+        testAvgLuminance();
 
         return 0;
 }

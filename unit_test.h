@@ -1,48 +1,12 @@
 #include "RGB_component.h"
+#include "CV_to_DCT.h"
+#include "calculations.h"
 #include "image.h"
 #include "uarray2.h"
 #include "uarray.h"
 
 
-// typedef struct Pnm_rgb {
-//         unsigned red, green, blue;
-// } *Pnm_rgb;
-
-/*PRINT FUNCTIONS FOR TESTING*/
-/*Print all cells of plain uarray2 with mapping*/
-// void a2_print(int i, int j, A2Methods_UArray2 a, A2Methods_Object *p1, void *p2)
-// {
-//         extern A2Methods_T uarray2_methods_plain;
-//         (void)p1;
-//         (void)p2;
-//         int num = *((int *)uarray2_methods_plain->at(a, i, j));
-//         // printf("arr[%d,%d]: %d\n", i, j, num);
-// }
-
-/*Print all cells of blocked uarray2b mapping*/
-// void a2b_print(int i, int j, UArray2_T a, void *p1, void *p2)
-// {
-//         (void)p1;
-//         (void)p2;
-//         int num = *((int *)UArray2_at(a, i, j));
-//         // printf("arr[%d,%d]: %d\n", i, j, num);
-// }
-/******************************************************************************/
-/******************************************************************************/
-/******************************************************************************/
-
-// void isImage(char *img)
-// {
-//         A2Methods_T methods = uarray2_methods_plain;
-//         FILE *fp;
-//         fp = fopen(img, "rb"); // change parameter for image
-//         Pnm_ppm image = readImagePpm(fp, methods);
-//         printf("Width: %d", image->width);  // change parameter according to image
-//         assert("Height: %d", image->height); // change parameter according to image
-//         fclose(fp);
-// }
-
-void testYPBPR()
+void testRGBtoCV()
 {
         FILE* fp = fopen("test.ppm", "rb");
 
@@ -62,51 +26,136 @@ void testYPBPR()
         fclose(fp);
         assert(image);
 
-        // printf("Width: %d\n", image->width);
-        // printf("Height: %d\n", image->height);
-        // printf("Denom: %d\n", image->denominator);
+        printf("Width: %d\n", image->width);
+        printf("Height: %d\n", image->height);
+        printf("Denom: %d\n", image->denominator);
 
         A2Methods_UArray2 cv_image = rgb_to_cv(image, map, methods);
 
+        for (int i = 0; i < 10; i++) {
+                Pnm_rgb first_pixel = (Pnm_rgb)methods->at(image->pixels, i, 0);
+                unsigned red = first_pixel->red;
+                unsigned green = first_pixel->green;
+                unsigned blue = first_pixel->blue;
+                printf("Red: %u, Green: %u, Blue: %u\n", red, green, blue);
+        }
 
-        // for (int i = 0; i < 10; i++) {
-        //         Pnm_rgb first_pixel = (Pnm_rgb)methods->at(image->pixels, i, 0);
-        //         unsigned red = first_pixel->red;
-        //         unsigned green = first_pixel->green;
-        //         unsigned blue = first_pixel->blue;
-        //         printf("Red: %u, Green: %u, Blue: %u\n", red, green, blue);
-        // }
+        for (int i = 0; i < 10; i++){
+                Pnm_ypbpr first_cv = (Pnm_ypbpr)methods->at(cv_image, i, 0);
+                float y = first_cv->y;
+                float pb = first_cv->pb;
+                float pr = first_cv->pr;
+                printf("y: %f, pb: %f, pr: %f\n", y, pb, pr);
+        }  
 
-        // for (int i = 0; i < 10; i++){
-        //         Pnm_ypbpr first_cv = (Pnm_ypbpr)methods->at(cv_image, i, 0);
-        //         float y = first_cv->y;
-        //         float pb = first_cv->pb;
-        //         float pr = first_cv->pr;
-        //         printf("y: %f, pb: %f, pr: %f\n", y, pb, pr);
-        // }
+        Pnm_ppmfree(&image);  
+        methods->free(&cv_image);
+}
+
+void testCVtoRGB() 
+{
+        FILE* fp = fopen("test.ppm", "rb");
+
+        if (!fp) {
+                fprintf(stderr, 
+                        "One of the files provided couldn't be opened\n");
+                exit(EXIT_FAILURE);
+        }
+
+        A2Methods_T methods = uarray2_methods_plain; 
+        assert(methods != NULL);
+
+        A2Methods_mapfun *map = methods->map_default; 
+        assert(map != NULL);
+
+        Pnm_ppm image = readImagePpm(fp, methods);
+        fclose(fp);
+        assert(image);
+
+        A2Methods_UArray2 cv_image = rgb_to_cv(image, map, methods);
 
         Pnm_ppm rgb_image = cv_to_rgb(cv_image, map, methods);
 
-        Pnm_ppmwrite(stdout, rgb_image);      
+        Pnm_ppmwrite(stdout, rgb_image); 
 }
 
-    // void RGB1()
-    // {
-    //     Pnm_ppm image = malloc(sizeof(*image));
-    //     assert(image != NULL);
-    //     image->denominator = 255;
 
-    //     Pnm_rgb pixel = malloc(sizeof(*pixel));
-    //     assert(pixel != NULL);
-    //     pixel->red = 27;
-    //     pixel->blue = 288;
-    //     pixel->green = 249;
+void DCT()
+{
+        FILE* fp = fopen("test.ppm", "rb");
 
-    //     A2Methods_mapfun *map = NULL;
-    //     A2Methods_T methods = NULL;
+        if (!fp) {
+                fprintf(stderr, 
+                        "One of the files provided couldn't be opened\n");
+                exit(EXIT_FAILURE);
+        }
 
-    //     A2Methods_UArray2 cv_image = rgb_to_cv(image, map, methods);
+        A2Methods_T methods = uarray2_methods_plain; 
+        assert(methods != NULL);
 
-    //     free(pixel);
-    //     free(image);
-    // }
+        A2Methods_mapfun *map = methods->map_default; 
+        assert(map != NULL);
+
+        Pnm_ppm image = readImagePpm(fp, methods);
+        fclose(fp);
+        assert(image);
+
+        A2Methods_UArray2 cv_image = rgb_to_cv(image, map, methods);
+
+        A2Methods_UArray2 wordImage = cv_to_DCT(cv_image, map, methods);
+
+        (void)wordImage;
+
+
+}
+
+
+void testAvgLuminance()
+{
+        Pnm_ypbpr pixel1 = malloc(sizeof(*pixel1));
+        if (!pixel1) {
+                fprintf(stderr, "Error: Unable to allocate memory.\n");
+                exit(EXIT_FAILURE);
+        }
+        pixel1->y = 0.3;
+        pixel1->pb = 0.2;
+        pixel1->pr = -0.13;
+
+        Pnm_ypbpr pixel2 = malloc(sizeof(*pixel2));
+        if (!pixel2) {
+                fprintf(stderr, "Error: Unable to allocate memory.\n");
+                exit(EXIT_FAILURE);
+        }
+        pixel2->y = 0.17;
+        pixel2->pb = 0.12;
+        pixel2->pr = 0.24;
+
+        Pnm_ypbpr pixel3 = malloc(sizeof(*pixel3));
+        if (!pixel3) {
+                fprintf(stderr, "Error: Unable to allocate memory.\n");
+                exit(EXIT_FAILURE);
+        }
+        pixel3->y = 0.78;
+        pixel3->pb = 0.23;
+        pixel3->pr = -0.09;
+
+        Pnm_ypbpr pixel4 = malloc(sizeof(*pixel4));
+        if (!pixel4) {
+                fprintf(stderr, "Error: Unable to allocate memory.\n");
+                exit(EXIT_FAILURE);
+        }
+        pixel4->y = 0.9;
+        pixel4->pb = 0.1;
+        pixel4->pr = -0.1;
+
+        ChromaAverages averages = computeAverageChromas(pixel1, pixel2, pixel3, pixel4);
+        float avg_pb = averages.avg_pb;
+        float avg_pr = averages.avg_pr;
+
+        printf("Average Pb: %0.2f\nAverage Pr: %0.2f\n", avg_pb, avg_pr);
+
+        free(pixel1);
+        free(pixel2);
+        free(pixel3);
+        free(pixel4);
+}
