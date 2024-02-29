@@ -1,7 +1,7 @@
 #include "unit_test.h"
 
 int main(){
-        testAvgLuminance();
+        DCTtoCv();
 
         return 0;
 }

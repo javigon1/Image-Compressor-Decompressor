@@ -20,7 +20,7 @@ A2Methods_UArray2 rgb_to_cv(Pnm_ppm image, A2Methods_mapfun *map,
 
         map(image->pixels, applyRGB, cl);
 
-        if(!cl) {
+        if(cl) {
                 free(cl);
                 cl = NULL;
         }
@@ -75,7 +75,7 @@ Pnm_ppm cv_to_rgb(A2Methods_UArray2 image, A2Methods_mapfun *map, A2Methods_T me
 
         map(image, applyCV, cl);
 
-        if(!cl) {
+        if(cl) {
                 free(cl);
                 cl = NULL;
         }

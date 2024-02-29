@@ -21,9 +21,8 @@ typedef struct code_word {
 A2Methods_UArray2 cv_to_DCT(A2Methods_UArray2 image, A2Methods_mapfun *map, 
                             A2Methods_T methods);
 void applyDCT(int col, int row, A2Methods_UArray2 UArray2, void *elem, void *cl);
-
-
-
-
+A2Methods_UArray2 DCT_to_cv(A2Methods_UArray2 DCT_image, A2Methods_mapfun *map,
+                            A2Methods_T methods);
+void applyCv(int col, int row, A2Methods_UArray2 UArray2, void *elem, void *cl);
 
 #endif

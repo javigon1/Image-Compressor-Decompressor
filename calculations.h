@@ -9,6 +9,7 @@
 #include <inttypes.h>
 #include "image.h"
 #include "RGB_component.h"
+#include "CV_to_DCT.h"
 
 
 typedef struct {

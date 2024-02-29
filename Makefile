@@ -45,7 +45,7 @@ LDLIBS = -l40locality -larith40 -lnetpbm -lcii40 -lm -lrt
 # he agrees with Noah that you'll probably spend hours 
 # debugging if you forget to put .h files in your 
 # dependency list.
-INCLUDES = $(shell echo *.h) image.h RGB_component.h 
+INCLUDES = $(shell echo *.h) image.h RGB_component.h CV_to_DCT.h calculations.h
 
 ############### Rules ###############
 

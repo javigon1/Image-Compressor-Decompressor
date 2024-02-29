@@ -102,11 +102,31 @@ void DCT()
 
         A2Methods_UArray2 cv_image = rgb_to_cv(image, map, methods);
 
+        for (int i = 0; i < 10; i+=2) {
+                Pnm_ypbpr ypbpr_pixel = (Pnm_ypbpr)methods->at(cv_image, i, 0);
+                float y = ypbpr_pixel->y;
+                float pb = ypbpr_pixel->pb;
+                float pr = ypbpr_pixel->pr;
+                fprintf(stderr, "y: %f, pb: %f, pr: %f\n", y, pb, pr);
+        }
+
         A2Methods_UArray2 wordImage = cv_to_DCT(cv_image, map, methods);
 
-        (void)wordImage;
+        for (int i = 0; i < 5; i++) {
+                code_word word = (code_word)methods->at(wordImage, i, 0);
+                unsigned a = word->a;
+                signed b = word->b;
+                signed c = word->c;
+                signed d = word->d;
+                unsigned pb = word->pb;
+                unsigned pr = word->pr;
+                fprintf(stderr, "a: %u, b: %d, c: %d, d: %d, pb: %u, pr: %u\n",
+                                 a, b, c, d, pb, pr);
+        }
 
-
+        Pnm_ppmfree(&image);  
+        methods->free(&cv_image);
+        methods->free(&wordImage);
 }
 
 
@@ -117,7 +137,7 @@ void testAvgLuminance()
                 fprintf(stderr, "Error: Unable to allocate memory.\n");
                 exit(EXIT_FAILURE);
         }
-        pixel1->y = 0.3;
+        pixel1->y = 0.30;
         pixel1->pb = 0.2;
         pixel1->pr = -0.13;
 
@@ -144,18 +164,85 @@ void testAvgLuminance()
                 fprintf(stderr, "Error: Unable to allocate memory.\n");
                 exit(EXIT_FAILURE);
         }
-        pixel4->y = 0.9;
+        pixel4->y = 0.90;
         pixel4->pb = 0.1;
         pixel4->pr = -0.1;
 
         ChromaAverages averages = computeAverageChromas(pixel1, pixel2, pixel3, pixel4);
         float avg_pb = averages.avg_pb;
         float avg_pr = averages.avg_pr;
+        float a = averages.a;
+        float b = averages.b;
+        float c = averages.c;
+        float d = averages.d;
 
         printf("Average Pb: %0.2f\nAverage Pr: %0.2f\n", avg_pb, avg_pr);
+        printf("a: %0.2f\nb: %0.2f\nc: %0.2f\nd: %0.2f\n", a, b, c, d);
 
         free(pixel1);
         free(pixel2);
         free(pixel3);
         free(pixel4);
+}
+
+
+void DCTtoCv()
+{
+        FILE* fp = fopen("test.ppm", "rb");
+
+        if (!fp) {
+                fprintf(stderr, 
+                        "One of the files provided couldn't be opened\n");
+                exit(EXIT_FAILURE);
+        }
+
+        A2Methods_T methods = uarray2_methods_plain; 
+        assert(methods != NULL);
+
+        A2Methods_mapfun *map = methods->map_default; 
+        assert(map != NULL);
+
+        Pnm_ppm image = readImagePpm(fp, methods);
+        fclose(fp);
+        assert(image);
+
+        A2Methods_UArray2 cv_image = rgb_to_cv(image, map, methods);
+
+        for (int i = 0; i < 10; i+=2) {
+                Pnm_ypbpr ypbpr_pixel = (Pnm_ypbpr)methods->at(cv_image, i, 0);
+                float y = ypbpr_pixel->y;
+                float pb = ypbpr_pixel->pb;
+                float pr = ypbpr_pixel->pr;
+                fprintf(stderr, "y: %f, pb: %f, pr: %f\n", y, pb, pr);
+        }
+
+        A2Methods_UArray2 wordImage = cv_to_DCT(cv_image, map, methods);
+
+        for (int i = 0; i < 5; i++) {
+                code_word word = (code_word)methods->at(wordImage, i, 0);
+                unsigned a = word->a;
+                signed b = word->b;
+                signed c = word->c;
+                signed d = word->d;
+                unsigned pb = word->pb;
+                unsigned pr = word->pr;
+                fprintf(stderr, "a: %u, b: %d, c: %d, d: %d, pb: %u, pr: %u\n",
+                                 a, b, c, d, pb, pr);
+        }
+
+
+        A2Methods_UArray2 back_to_cv = DCT_to_cv(wordImage, map, methods);
+
+
+        for (int i = 0; i < 10; i+=2) {
+                Pnm_ypbpr ypbpr_pixel = (Pnm_ypbpr)methods->at(back_to_cv, i, 0);
+                float y = ypbpr_pixel->y;
+                float pb = ypbpr_pixel->pb;
+                float pr = ypbpr_pixel->pr;
+                fprintf(stderr, "y: %f, pb: %f, pr: %f\n", y, pb, pr);
+        }
+
+        Pnm_ppmfree(&image);  
+        methods->free(&back_to_cv);
+        methods->free(&wordImage);
 }
