@@ -61,7 +61,7 @@ all: 40image ppmdiff
 
 ## Linking step (.o -> executable program)
 
-unit_test: unit_test.o RGB_component.o image.o uarray2.o a2methods.o
+unit_test: unit_test.o RGB_component.o image.o uarray2.o a2plain.o #a2blocked.o
 	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
 40image: 40image.o compression.o image.o uarray2.o a2plain.o RGB_component.o

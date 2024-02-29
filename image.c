@@ -44,3 +44,24 @@ Pnm_ppm readImagePpm(FILE *fp, A2Methods_T methods)
         
         return new_image;
 }       
+
+
+void printImagePpm(A2Methods_UArray2 array, A2Methods_T methods)
+{
+        (void)array;
+        (void)methods;
+
+        // /* REMEBER TO MULTIPLE LATER - THIS IS JUST FOR CHECKING */
+        // int width = methods->width(array);
+        // int height = methods->height(array);
+
+        // printf("COMP40 Compressed image format 2\n%u %u\n", width, height);
+
+        // for (int i = 0; i < height; i++) {
+        //         for (int j = 0; j < width; j++) {
+        //                 printf("") methods->at(array, j, i);
+        //         }
+        // }
+
+
+}

@@ -19,6 +19,7 @@
 
 
 Pnm_ppm readImagePpm(FILE *fp, A2Methods_T methods);
+void printImagePpm(A2Methods_UArray2 array, A2Methods_T methods);
 
 
 #endif
