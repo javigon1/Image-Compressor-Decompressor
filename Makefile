@@ -45,11 +45,11 @@ LDLIBS = -l40locality -larith40 -lnetpbm -lcii40 -lm -lrt
 # he agrees with Noah that you'll probably spend hours 
 # debugging if you forget to put .h files in your 
 # dependency list.
-INCLUDES = $(shell echo *.h) 
+INCLUDES = $(shell echo *.h) image.h RGB_component.h 
 
 ############### Rules ###############
 
-all: ppmdiff
+all: 40image ppmdiff
 
 
 ## Compile step (.c files -> .o files)
@@ -61,10 +61,16 @@ all: ppmdiff
 
 ## Linking step (.o -> executable program)
 
+unit_test: unit_test.o RGB_component.o image.o uarray2.o a2methods.o
+	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
+
+40image: 40image.o compression.o image.o uarray2.o a2plain.o RGB_component.o
+		$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
 ppmdiff: ppmdiff.o a2plain.o uarray2.o
 	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
+
 clean:
-	rm -f ppmdiff *.o
+	rm -f ppmdiff image *.o
 

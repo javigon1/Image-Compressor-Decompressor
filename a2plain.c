@@ -2,8 +2,8 @@
  *
  *                              a2plain.c
  *
- *     Assignment: locality
- *     Authors:  Luciano Galvani and Kieran Fergus 
+ *     Assignment: arith
+ *     Authors:  Javi Gonzalez and Kieran Fergus 
  *     Date:     2/22/24
  *
  *     This file contains an implementation of the A2Methods interface that
@@ -155,7 +155,7 @@ static void small_map_col_major(A2Methods_UArray2        a2,
  */
 static void a2free(A2Methods_UArray2 *a2)
 {
-        UArray2_free((UArray2_T *)a2);
+        UArray2_free((UArray2_T *) a2);
 }
 
 
