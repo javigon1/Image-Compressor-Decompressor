@@ -54,7 +54,7 @@ void testRGBtoCV()
 
 void testCVtoRGB() 
 {
-        FILE* fp = fopen("test.ppm", "rb");
+        FILE* fp = fopen("ppm.ppm", "rb");
 
         if (!fp) {
                 fprintf(stderr, 
@@ -82,7 +82,7 @@ void testCVtoRGB()
 
 void DCT()
 {
-        FILE* fp = fopen("test.ppm", "rb");
+        FILE* fp = fopen("ppm.ppm", "rb");
 
         if (!fp) {
                 fprintf(stderr, 
@@ -188,7 +188,7 @@ void testAvgLuminance()
 
 void DCTtoCv()
 {
-        FILE* fp = fopen("test.ppm", "rb");
+        FILE* fp = fopen("ppm.ppm", "rb");
 
         if (!fp) {
                 fprintf(stderr, 
@@ -206,43 +206,91 @@ void DCTtoCv()
         fclose(fp);
         assert(image);
 
+        // printf("IN RGB\n");
+
+        // for (int i = 0; i < 2; i++) {
+        //         for (int j = 0; j < 4; j++) {
+        //                 Pnm_rgb first_pixel = (Pnm_rgb)methods->at(image->pixels, j, i);
+        //                 unsigned red = first_pixel->red;
+        //                 unsigned green = first_pixel->green;
+        //                 unsigned blue = first_pixel->blue;
+        //                 printf("[%d][%d]\n",j, i);
+        //                 printf("Red: %u, Green: %u, Blue: %u\n", red, green, blue);
+        //         }
+        // }
+
         A2Methods_UArray2 cv_image = rgb_to_cv(image, map, methods);
 
-        for (int i = 0; i < 10; i+=2) {
-                Pnm_ypbpr ypbpr_pixel = (Pnm_ypbpr)methods->at(cv_image, i, 0);
-                float y = ypbpr_pixel->y;
-                float pb = ypbpr_pixel->pb;
-                float pr = ypbpr_pixel->pr;
-                fprintf(stderr, "y: %f, pb: %f, pr: %f\n", y, pb, pr);
-        }
+        // printf("RGB TO CV\n");
+
+        // for (int i = 0; i < 2; i++) {
+        //         for (int j = 0; j < 4; j++) {
+        //                 Pnm_ypbpr ypbpr_pixel = (Pnm_ypbpr)methods->at(cv_image, j, i);
+        //                 float y = ypbpr_pixel->y;
+        //                 float pb = ypbpr_pixel->pb;
+        //                 float pr = ypbpr_pixel->pr;
+        //                 printf("[%d][%d]\n",j, i);
+        //                 fprintf(stderr, "y: %f, pb: %f, pr: %f\n", y, pb, pr);
+        //         }
+        // }
 
         A2Methods_UArray2 wordImage = cv_to_DCT(cv_image, map, methods);
 
-        for (int i = 0; i < 5; i++) {
-                code_word word = (code_word)methods->at(wordImage, i, 0);
-                unsigned a = word->a;
-                signed b = word->b;
-                signed c = word->c;
-                signed d = word->d;
-                unsigned pb = word->pb;
-                unsigned pr = word->pr;
-                fprintf(stderr, "a: %u, b: %d, c: %d, d: %d, pb: %u, pr: %u\n",
-                                 a, b, c, d, pb, pr);
-        }
+        // printf("CV TO DCT\n");
+
+        // for (int i = 0; i < 2; i++) {
+        //         for (int j = 0; j < 2; j++) {
+        //                 code_word word = (code_word)methods->at(wordImage, j, i);
+        //                 unsigned a = word->a;
+        //                 signed b = word->b;
+        //                 signed c = word->c;
+        //                 signed d = word->d;
+        //                 unsigned pb = word->pb;
+        //                 unsigned pr = word->pr;
+        //                 printf("[%d][%d]\n", j, i);
+        //                 fprintf(stderr, "a: %u, b: %d, c: %d, d: %d, pb: %u, pr: %u\n",
+        //                         a, b, c, d, pb, pr);
+        //         }
+        // }
 
 
         A2Methods_UArray2 back_to_cv = DCT_to_cv(wordImage, map, methods);
 
+        // printf("DCT TO CV\n");
 
-        for (int i = 0; i < 10; i+=2) {
-                Pnm_ypbpr ypbpr_pixel = (Pnm_ypbpr)methods->at(back_to_cv, i, 0);
-                float y = ypbpr_pixel->y;
-                float pb = ypbpr_pixel->pb;
-                float pr = ypbpr_pixel->pr;
-                fprintf(stderr, "y: %f, pb: %f, pr: %f\n", y, pb, pr);
-        }
+        // for (int i = 0; i < 2; i++) {
+        //         for (int j = 0; j < 4; j++) {
+        //                 Pnm_ypbpr ypbpr_pixel = (Pnm_ypbpr)methods->at(back_to_cv, j, i);
+        //                 float y = ypbpr_pixel->y;
+        //                 float pb = ypbpr_pixel->pb;
+        //                 float pr = ypbpr_pixel->pr;
+        //                 printf("[%d][%d]\n",j, i);
+        //                 fprintf(stderr, "y: %f, pb: %f, pr: %f\n", y, pb, pr);
+        //         }
+        // }
+
+        Pnm_ppm rgb_image = cv_to_rgb(cv_image, map, methods);
+
+        Pnm_ppmwrite(stdout, rgb_image); 
+
+        // printf("BACK TO RGB\n");
+
+
+        // for (int i = 0; i < 2; i++) {
+        //         for (int j = 0; j < 4; j++) {
+        //                 Pnm_rgb first_pixel = (Pnm_rgb)methods->at(image->pixels, j, i);
+        //                 unsigned red = first_pixel->red;
+        //                 unsigned green = first_pixel->green;
+        //                 unsigned blue = first_pixel->blue;
+        //                 printf("[%d][%d]\n",j, i);
+        //                 printf("Red: %u, Green: %u, Blue: %u\n", red, green, blue);
+        //         }
+        // }
+
+        // (void)back_to_rgb;
 
         Pnm_ppmfree(&image);  
         methods->free(&back_to_cv);
         methods->free(&wordImage);
+        // methods->free(&ba ck_to_rgb);
 }
