@@ -1,5 +1,6 @@
 #include "RGB_component.h"
 #include "CV_to_DCT.h"
+#include "bitpack.h"
 #include "calculations.h"
 #include "image.h"
 #include "uarray2.h"
@@ -188,7 +189,7 @@ void testAvgLuminance()
 
 void DCTtoCv()
 {
-        FILE* fp = fopen("ppm.ppm", "rb");
+        FILE* fp = fopen("empty.ppm", "rb");
 
         if (!fp) {
                 fprintf(stderr, 
@@ -293,4 +294,25 @@ void DCTtoCv()
         methods->free(&back_to_cv);
         methods->free(&wordImage);
         // methods->free(&ba ck_to_rgb);
+}
+
+
+void testShifts()
+{
+        uint64_t test_u = 0x3f4;
+        int64_t test_s = 0x3f4;
+        unsigned width = 6;
+        // unsigned lsb = 2;
+
+        printf("Value unsigned: %lu\n", test_u);
+        printf("Value unsigned: %ld\n", test_s);
+
+        printf("Bitpack_fitsu test: %d\n", Bitpack_fitsu(test_u, width));
+        printf("Bitpack_fitss test: %d\n", Bitpack_fitss(test_s, width));
+}
+
+void testShifts2()
+{       
+        printf("Bitpack_fitsu test: %d\n", Bitpack_fitsu(5, 3));
+        printf("Bitpack_fitss test: %d\n", Bitpack_fitss(5, 3));
 }
