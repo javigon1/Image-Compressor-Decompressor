@@ -325,6 +325,54 @@ void testExtract()
         printf("Bitpack_gets test (-3): %ld\n", result2);
 }
 
+void test_getu()
+{
+        uint64_t word = 0x3f4; // 001111110100
+        unsigned width = 6;    // ----^^^^^^--
+        unsigned lsb = 2;
+        uint64_t field = Bitpack_getu(word, width, lsb);
+        printf("FIELD UNSIGNED: %" PRIu64"\n", field);
+        assert(field == 61);
+}
+
+void test_gets()
+{
+        int64_t word = 0x3f4; // 001111110100
+        unsigned width = 6;   // ----^^^^^^--
+        unsigned lsb = 2;
+        int64_t field = Bitpack_gets(word, width, lsb);
+        printf("FIELD SIGNED: %" PRId64"\n", field);
+        assert(field == -3);
+
+        word = 357; // 101100101
+        width = 4;  // -----^^^^
+        lsb = 0;
+        field = Bitpack_gets(word, width, lsb);
+        printf("FIELD SIGNED: %" PRId64 "\n", field);
+        assert(field == 5);
+}
+
+void test_newu()
+{
+        int64_t word = 14585;
+        unsigned width = 7;
+        unsigned lsb = 0;
+        uint64_t value = 67;
+        uint64_t field = Bitpack_newu(word, width, lsb, value);
+        printf("new uint64_t: %lu\n", field);
+        assert(field == 14531);
+}
+
+void test_news()
+{
+        int64_t word = -17;
+        unsigned width = 2;
+        unsigned lsb = 2;
+        uint64_t value = 3;
+        uint64_t field = Bitpack_news(word, width, lsb, value);
+        printf("new int64_t: %lu\n", field);
+        //assert(field == );
+}
 
 // void testPower()
 // {

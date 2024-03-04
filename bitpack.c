@@ -54,18 +54,12 @@ static inline int64_t rightShiftSigned(int64_t n, unsigned width)
 }
 
 
-static inline uint64_t power(unsigned base, unsigned exponent)
-{
-       return leftShiftUnsigned(base, exponent); 
-}
-
-
 bool Bitpack_fitsu(uint64_t n, unsigned width)
 {
         // if (width == 0){
         //         return false;
         // }
-        if ((uint64_t)power(2, width) >= n){
+        if ((uint64_t)(1 << width) >= n){
                 return true;
         }
         return false;
@@ -75,7 +69,7 @@ bool Bitpack_fitsu(uint64_t n, unsigned width)
 
 bool Bitpack_fitss(int64_t n, unsigned width)
 {
-        int64_t high = ((int64_t)power(2, width) / 2) - 1;
+        int64_t high = ((int64_t)(1 << width) / 2) - 1;
         int64_t low = (-1 * high) - 1;
 
         if (n >= low && n <= high){
@@ -145,32 +139,23 @@ uint64_t Bitpack_newu(uint64_t word, unsigned width, unsigned lsb,
         assert(width <= 64);
         assert(width + lsb <= 64);
 
-        if (!Bitpack_fitsu(word, width)) RAISE(Bitpack_Overflow);
+        if (!Bitpack_fitsu(value, width)) RAISE(Bitpack_Overflow);
 
-        uint64_t mask = leftShiftUnsigned(value, lsb);
+        uint64_t mask = leftShiftUnsigned(1, width) - 1;
+        mask = leftShiftUnsigned(mask, lsb);
+        mask = ~mask;
 
-        // mask = leftShiftUnsigned(mask, MAX_BITS - width);
-        // mask = rightShiftUnsigned(mask, MAX_BITS - width - lsb);
+        uint64_t new_word = word;
+        new_word = new_word & mask;
 
-        return word ^ mask;
+        uint64_t val_mask = leftShiftUnsigned(1, width) - 1;
 
-        
+        uint64_t value_field = value & val_mask;
+        value_field = leftShiftUnsigned(value_field, lsb);
 
-        // uint64_t mask = leftShiftUnsigned(1, width) - 1;
-        // mask = leftShiftUnsigned(mask, lsb);
-        // mask = ~mask;
+        new_word = new_word | value_field;
 
-        // uint64_t new_word = word;
-        // new_word = new_word & mask;
-
-        // uint64_t val_mask = leftShiftUnsigned(1, width) - 1;
-
-        // uint64_t value_field = value & val_mask;
-        // value_field = leftShiftUnsigned(value_field, lsb);
-
-        // new_word = new_word | value_field;
-
-        // return new_word;
+        return new_word;
 }
 
 
