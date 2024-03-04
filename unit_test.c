@@ -1,7 +1,8 @@
 #include "unit_test.h"
 
 int main(){
-        DCTtoCv();
+        
+        testExtract();
 
         return 0;
 }

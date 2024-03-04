@@ -189,7 +189,7 @@ void testAvgLuminance()
 
 void DCTtoCv()
 {
-        FILE* fp = fopen("empty.ppm", "rb");
+        FILE* fp = fopen("ppm.ppm", "rb");
 
         if (!fp) {
                 fprintf(stderr, 
@@ -313,6 +313,14 @@ void testShifts()
 
 void testShifts2()
 {       
-        printf("Bitpack_fitsu test: %d\n", Bitpack_fitsu(5, 3));
-        printf("Bitpack_fitss test: %d\n", Bitpack_fitss(5, 3));
+        printf("Bitpack_fitsu test (TRUE): %d\n", Bitpack_fitsu(5, 3));
+        printf("Bitpack_fitss test (FALSE): %d\n", Bitpack_fitss(5, 3));
+}
+
+void testExtract()
+{
+        uint64_t result = Bitpack_getu(0x3f4, 6, 2);
+        printf("Bitpack_getu test (61): %lu\n", result);
+        int64_t result2 = Bitpack_gets(0x3f4, 6, 2);
+        printf("Bitpack_gets test (-3): %ld\n", result2);
 }
