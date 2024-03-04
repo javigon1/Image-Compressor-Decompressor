@@ -301,7 +301,7 @@ void testShifts()
 {
         uint64_t test_u = 0x3f4;
         int64_t test_s = 0x3f4;
-        unsigned width = 6;
+        unsigned width = 11;
         // unsigned lsb = 2;
 
         printf("Value unsigned: %lu\n", test_u);
@@ -324,3 +324,9 @@ void testExtract()
         int64_t result2 = Bitpack_gets(0x3f4, 6, 2);
         printf("Bitpack_gets test (-3): %ld\n", result2);
 }
+
+
+// void testPower()
+// {
+//         printf("Value: %u\n", power(2, 0));
+// }
