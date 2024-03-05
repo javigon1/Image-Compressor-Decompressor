@@ -11,9 +11,12 @@
 extern Except_T Bitpack_Overflow;
 
 
+<<<<<<< HEAD
 void print_uint64_binary(uint64_t num);
 void print_int64_binary(int64_t num);
 
+=======
+>>>>>>> origin/main
 bool Bitpack_fitsu(uint64_t n, unsigned width);
 bool Bitpack_fitss( int64_t n, unsigned width);
 
