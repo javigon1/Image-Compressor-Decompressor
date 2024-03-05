@@ -79,32 +79,32 @@ void applyPack(int col, int row, A2Methods_UArray2 UArray2, void *elem, void *cl
 }
 
 
-// A2Methods_UArray2 unpackWords(A2Methods_UArray2 codeword_array, A2Methods_mapfun *map, 
-//                               A2Methods_T methods)
-// {
-//         int width = methods->width(codeword_array);
-//         int height = methods->height(codeword_array);
+A2Methods_UArray2 unpackWords(A2Methods_UArray2 codeword_array, A2Methods_mapfun *map, 
+                              A2Methods_T methods)
+{
+        int width = methods->width(codeword_array);
+        int height = methods->height(codeword_array);
 
 
-//         A2Methods_UArray2 DCT_image = methods->new(width, 
-//                                                    height,
-//                                                    sizeof(struct code_word));
+        A2Methods_UArray2 DCT_image = methods->new(width, 
+                                                   height,
+                                                   sizeof(struct code_word));
 
 
-//         struct closure *cl = malloc(sizeof(*cl));
+        struct closure *cl = malloc(sizeof(*cl));
 
-//         cl->methods = methods;
-//         cl->array = DCT_image;
+        cl->methods = methods;
+        cl->array = DCT_image;
 
-//         map(codeword_array, applyPack, cl);
+        map(codeword_array, applyPack, cl);
 
-//         if(cl) {
-//                 free(cl);
-//                 cl = NULL;
-//         }
+        if(cl) {
+                free(cl);
+                cl = NULL;
+        }
 
-//         return DCT_image;
-// }
+        return DCT_image;
+}
 
 
 // void applyUnpack(int col, int row, A2Methods_UArray2 UArray2, void *elem, void *cl)
