@@ -358,22 +358,14 @@ void fitss3()
 
 void fitsu4()
 {
-<<<<<<< HEAD
         printf("Bitpack_fitsu test4 (1): %d\n", Bitpack_fitsu(-1, 3));
 }
 
 void fitss5()
-=======
-        printf("Bitpack_fitsu test4 (0): %d\n", Bitpack_fitsu(-1, 3));
-}
-
-void fitss4()
->>>>>>> origin/main
 {
         printf("Bitpack_fitss test4 (0): %d\n", Bitpack_fitss(-5, 3));
 }
 
-<<<<<<< HEAD
 void fitss6()
 {
         printf("Bitpack_fitss test4 (1): %d\n", Bitpack_fitss(-9, 5));
@@ -389,8 +381,6 @@ void fitss8()
         printf("Bitpack_fitss test4 (0): %d\n", Bitpack_fitss(-275, 5));
 }
 
-=======
->>>>>>> origin/main
 void test_getu()
 {
         uint64_t word = 0x3f4; 
@@ -525,11 +515,7 @@ void test_news3()
         unsigned lsb = 0;
         int64_t value = -2;
         uint64_t field = Bitpack_news(word, width, lsb, value);
-<<<<<<< HEAD
         printf("new int64_t3 (-10): %ld\n", field);
-=======
-        printf("new int64_t3 (-2): %ld\n", field);
->>>>>>> origin/main
 }
 
 void test_news4()
@@ -539,11 +525,7 @@ void test_news4()
         unsigned lsb = 0;
         int64_t value = 7;
         uint64_t field = Bitpack_news(word, width, lsb, value);
-<<<<<<< HEAD
         printf("new int64_t4 (-25): %ld\n", field);
-=======
-        printf("new int64_t4 (-9): %ld\n", field);
->>>>>>> origin/main
 }
 
 void test_news5()
@@ -551,15 +533,9 @@ void test_news5()
         uint64_t word = -123456;
         unsigned width = 5;
         unsigned lsb = 5;
-<<<<<<< HEAD
         int64_t value = -20;
         uint64_t field = Bitpack_news(word, width, lsb, value);
         printf("new int64_t5 (-123520): %ld\n", field);
-=======
-        int64_t value = -15;
-        uint64_t field = Bitpack_news(word, width, lsb, value);
-        printf("new int64_t5 (-15136): %ld\n", field);
->>>>>>> origin/main
 }
 
 void test_news6()
@@ -572,7 +548,6 @@ void test_news6()
         printf("new int64_t6 (-112): %ld\n", field);
 }
 
-<<<<<<< HEAD
 /* SHOULD RESULT IN FAILED ASSERTION */
 void test_news7()
 {
@@ -584,8 +559,6 @@ void test_news7()
         printf("new int64_t5 (-15136): %ld\n", field);
 }
 
-=======
->>>>>>> origin/main
 void test_law1()
 {
         uint64_t word = 500;
@@ -619,7 +592,6 @@ void test_law2()
 //         uint64_t right = getu(word, width2, width + lsb);
 
 //         printf("right: %ld, left: %ld\n\n", right, left);
-<<<<<<< HEAD
 // }
 
 void testPack()
@@ -674,6 +646,3 @@ void testPack()
         methods->free(&wordSequence);
         methods->free(&wordImage);
 }
-=======
-// }
->>>>>>> origin/main
