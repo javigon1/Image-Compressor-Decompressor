@@ -363,22 +363,22 @@ void fitsu4()
 
 void fitss5()
 {
-        printf("Bitpack_fitss test4 (0): %d\n", Bitpack_fitss(-5, 3));
+        printf("Bitpack_fitss test5 (0): %d\n", Bitpack_fitss(-5, 3));
 }
 
 void fitss6()
 {
-        printf("Bitpack_fitss test4 (1): %d\n", Bitpack_fitss(-9, 5));
+        printf("Bitpack_fitss test6 (1): %d\n", Bitpack_fitss(-9, 5));
 }
 
 void fitss7()
 {
-        printf("Bitpack_fitss test4 (1): %d\n", Bitpack_fitss(-9, 4));
+        printf("Bitpack_fitss test7 (0): %d\n", Bitpack_fitss(-9, 4));
 }
 
 void fitss8()
 {
-        printf("Bitpack_fitss test4 (0): %d\n", Bitpack_fitss(-275, 5));
+        printf("Bitpack_fitss test8 (0): %d\n", Bitpack_fitss(-275, 5));
 }
 
 void test_getu()

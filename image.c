@@ -1,4 +1,13 @@
 #include "image.h"
+#include "bitpack.h"
+
+
+#define INDEX0 0
+#define INDEX1 8
+#define INDEX2 16
+#define INDEX3 24
+
+#define BYTE_WIDTH 8
 
 
 #define A2M A2Methods_UArray2
@@ -46,31 +55,47 @@ Pnm_ppm readImagePpm(FILE *fp, A2Methods_T methods)
 }       
 
 
-// void printCompressedImage(A2Methods_UArray2 codeword_array, A2Methods_mapfun *map, 
-//                           A2Methods_T methods)
-// {
-//         int width = methods->width(codeword_array);
-//         int height = methods->height(codeword_array);
+void printCompressedImage(A2Methods_UArray2 codeword_array, A2Methods_mapfun *map, 
+                          A2Methods_T methods)
+{
+        (void)map;
+        int width = methods->width(codeword_array);
+        int height = methods->height(codeword_array);
 
-//         printf("COMP40 Compressed image format 2\n%u %u\n", width, height);
+        printf("COMP40 Compressed image format 2\n%u %u\n", width, height);
 
-//         struct closure *cl = malloc(sizeof(*cl));
+        A2Methods_UArray2 codeword_sequence = methods->new(width, 
+                                                           height,
+                                                           sizeof(uint64_t));
 
-//         cl->methods = methods;
+        struct closure *cl = malloc(sizeof(*cl));
+        cl->methods = methods;
+        cl->array = codeword_sequence;
 
-//         map(codeword_array, printCodeword, cl);
+        map(codeword_array, applyPrintWord, cl);
 
-//         if(cl) {
-//                 free(cl);
-//                 cl = NULL;
-//         }
-// }
+        if(cl) {
+                free(cl);
+                cl = NULL;
+        }        
+}
 
+void applyPrintWord(int col, int row, A2Methods_UArray2 UArray2, void *elem, void *cl)
+{
+        (void)UArray2;
+        (void)col;
+        (void)row;
+        (void)cl;
+        // struct closure *closure = (struct closure *)cl;
 
-// void printCodeword(int col, int row, A2Methods_UArray2 UArray2, void *elem, void *cl)
-// {
+        uint64_t current_word = (uint64_t)elem;
 
-// }
+        putchar(Bitpack_getu(current_word, BYTE_WIDTH, INDEX0));
+        putchar(Bitpack_getu(current_word, BYTE_WIDTH, INDEX1));
+        putchar(Bitpack_getu(current_word, BYTE_WIDTH, INDEX2));
+        putchar(Bitpack_getu(current_word, BYTE_WIDTH, INDEX3));
+}
+
 
 
 // void printImagePpm(A2Methods_UArray2 codeword_array, A2Methods_T methods)

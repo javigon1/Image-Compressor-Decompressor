@@ -5,6 +5,7 @@
 
 Except_T Bitpack_Overflow = {"Overflow packing bits"};
 
+//testing function (to be deleted)
 void print_uint64_binary(uint64_t num)
 {
         for (int i = 63; i >= 0; i--)
@@ -16,6 +17,7 @@ void print_uint64_binary(uint64_t num)
         printf("\n");
 }
 
+// testing function (to be deleted)
 void print_int64_binary(int64_t num)
 {
         for (int i = 63; i >= 0; i--)
@@ -176,38 +178,38 @@ uint64_t Bitpack_news(uint64_t word, unsigned width, unsigned lsb, int64_t value
         assert(width <= 64);
         assert(width + lsb <= 64);
 
-        if (!Bitpack_fitsu(value, width)) RAISE(Bitpack_Overflow);
+        if (!Bitpack_fitss(value, width)) RAISE(Bitpack_Overflow);
 
         int64_t mask = leftShift(1, width) - 1;
-        printf("mask:                   ");
-        print_int64_binary(mask);
+        // printf("mask:                   ");
+        // print_int64_binary(mask);
         mask = leftShift(mask, lsb);
         mask = ~mask;
-        printf("mask:                   ");
-        print_int64_binary(mask);
+        // printf("mask:                   ");
+        // print_int64_binary(mask);
 
         uint64_t new_word = word;
-        printf("new_word:               ");
-        print_uint64_binary(new_word);
+        // printf("new_word:               ");
+        // print_uint64_binary(new_word);
         new_word = new_word & mask;
-        printf("new_word & mask:        ");
-        print_uint64_binary(new_word);
+        // printf("new_word & mask:        ");
+        // print_uint64_binary(new_word);
 
         int64_t val_mask = leftShift(1, width) - 1;
-        printf("value:                  ");
-        print_int64_binary(value);
+        // printf("value:                  ");
+        // print_int64_binary(value);
         int64_t value_field = value & val_mask;
-        printf("value_field:            ");
-        print_int64_binary(value_field);
+        // printf("value_field:            ");
+        // print_int64_binary(value_field);
 
         value_field = leftShift(value_field, lsb);
-        printf("lsb << value_field:     ");
+        // printf("lsb << value_field:     ");
 
-        print_int64_binary(value_field);
+        // print_int64_binary(value_field);
 
         new_word = new_word | value_field;
-        printf("new_word | value_field: ");
-        print_uint64_binary(new_word);
+        // printf("new_word | value_field: ");
+        // print_uint64_binary(new_word);
 
         // if ((new_word & leftShift(1, 63)) != 0)
         // {
