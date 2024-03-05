@@ -19,6 +19,9 @@
 
 
 Pnm_ppm readImagePpm(FILE *fp, A2Methods_T methods);
+void printCompressedImage(A2Methods_UArray2 array, A2Methods_mapfun *map,
+                          A2Methods_T methods);
+void printCodeword(int col, int row, A2Methods_UArray2 UArray2, void *elem, void *cl);
 void printImagePpm(A2Methods_UArray2 array, A2Methods_T methods);
 
 

@@ -4,6 +4,7 @@
 #include "calculations.h"
 #include "image.h"
 #include "uarray2.h"
+#include "packUnpack.h"
 #include "uarray.h"
 
 
@@ -189,7 +190,7 @@ void testAvgLuminance()
 
 void DCTtoCv()
 {
-        FILE* fp = fopen("empty.ppm", "rb");
+        FILE* fp = fopen("ppm.ppm", "rb");
 
         if (!fp) {
                 fprintf(stderr, 
@@ -301,7 +302,7 @@ void testShifts()
 {
         uint64_t test_u = 0x3f4;
         int64_t test_s = 0x3f4;
-        unsigned width = 6;
+        unsigned width = 11;
         // unsigned lsb = 2;
 
         printf("Value unsigned: %lu\n", test_u);
@@ -313,6 +314,335 @@ void testShifts()
 
 void testShifts2()
 {       
-        printf("Bitpack_fitsu test: %d\n", Bitpack_fitsu(5, 3));
-        printf("Bitpack_fitss test: %d\n", Bitpack_fitss(5, 3));
+        printf("Bitpack_fitsu test (TRUE): %d\n", Bitpack_fitsu(5, 3));
+        printf("Bitpack_fitss test (FALSE): %d\n", Bitpack_fitss(5, 3));
+}
+
+void testExtract()
+{
+        uint64_t result = Bitpack_getu(0x3f4, 6, 2);
+        printf("Bitpack_getu test (61): %lu\n", result);
+        int64_t result2 = Bitpack_gets(0x3f4, 6, 2);
+        printf("Bitpack_gets test (-3): %ld\n", result2);
+}
+
+void fitsu()
+{
+        printf("Bitpack_fitsu test (1): %d\n", Bitpack_fitsu(7, 3));
+}
+
+void fitss()
+{
+        printf("Bitpack_fitss test (1): %d\n", Bitpack_fitss(3, 3));
+}
+
+void fitsu2()
+{
+        printf("Bitpack_fitsu test2 (0): %d\n", Bitpack_fitsu(8, 3));
+}
+
+void fitss2()
+{
+        printf("Bitpack_fitss test2 (0): %d\n", Bitpack_fitss(4, 3));
+}
+
+void fitsu3()
+{
+        printf("Bitpack_fitsu test3 (1): %d\n", Bitpack_fitsu(0, 3));
+}
+
+void fitss3()
+{
+        printf("Bitpack_fitss test3 (1): %d\n", Bitpack_fitss(-4, 3));
+}
+
+void fitsu4()
+{
+        printf("Bitpack_fitsu test4 (1): %d\n", Bitpack_fitsu(-1, 3));
+}
+
+void fitss5()
+{
+        printf("Bitpack_fitss test4 (0): %d\n", Bitpack_fitss(-5, 3));
+}
+
+void fitss6()
+{
+        printf("Bitpack_fitss test4 (1): %d\n", Bitpack_fitss(-9, 5));
+}
+
+void fitss7()
+{
+        printf("Bitpack_fitss test4 (1): %d\n", Bitpack_fitss(-9, 4));
+}
+
+void fitss8()
+{
+        printf("Bitpack_fitss test4 (0): %d\n", Bitpack_fitss(-275, 5));
+}
+
+void test_getu()
+{
+        uint64_t word = 0x3f4; 
+        unsigned width = 6;   
+        unsigned lsb = 2;
+        uint64_t field = Bitpack_getu(word, width, lsb);
+        printf("FIELD UNSIGNED: %" PRIu64"\n", field);
+        assert(field == 61);
+}
+
+void test_getu2()
+{
+        uint64_t word = 14585;
+        unsigned width = 7;   
+        unsigned lsb = 0;
+        uint64_t field = Bitpack_getu(word, width, lsb);
+        printf("FIELD UNSIGNED: (121)%" PRIu64"\n", field);
+        assert(field == 121);
+}
+
+/* Works correctly */
+void RaiseException()
+{
+        int64_t word = 14585;
+        unsigned width = 3;
+        unsigned lsb = 0;
+        uint64_t value = 67;
+        uint64_t field = Bitpack_newu(word, width, lsb, value);
+        printf("new uint64_t (14531): %lu\n", field);
+        assert(field == 14531);
+}
+
+/* Works correctly */
+void RaiseException2()
+{
+        int64_t word = 14585;
+        unsigned width = 3;
+        unsigned lsb = 0;
+        uint64_t value = 67;
+        uint64_t field = Bitpack_news(word, width, lsb, value);
+        printf("new int64_t: %lu\n", field);
+        assert(field == 14531);
+}
+
+/* Works correctly */
+void RaiseException3()
+{
+        int64_t word = 14585;
+        unsigned width = 3;
+        unsigned lsb = 0;
+        uint64_t value = 7;
+        uint64_t field = Bitpack_newu(word, width, lsb, value);
+        printf("new uint64_t (14531): %lu\n", field);
+        assert(field == 14531);
+}
+
+void test_gets()
+{
+        int64_t word = 0x3f4;
+        unsigned width = 6; 
+        unsigned lsb = 2;
+        int64_t field = Bitpack_gets(word, width, lsb);
+        printf("FIELD SIGNED: %" PRId64"\n", field);
+        assert(field == -3);
+
+        word = 357;
+        width = 4;  
+        lsb = 0;
+        field = Bitpack_gets(word, width, lsb);
+        printf("FIELD SIGNED: %" PRId64 "\n", field);
+        assert(field == 5);
+}
+
+void test_newu()
+{
+        int64_t word = 14585;
+        unsigned width = 7;
+        unsigned lsb = 0;
+        uint64_t value = 67;
+        uint64_t field = Bitpack_newu(word, width, lsb, value);
+        printf("new uint64_t (14531): %lu\n", field);
+        assert(field == 14531);
+}
+
+
+void test_newu2()
+{
+        int64_t word = 0x7FFFFFFFFFFFFFFF;
+        unsigned width = 64;
+        unsigned lsb = 0;
+        uint64_t value = 0;
+        uint64_t field = Bitpack_newu(word, width, lsb, value);
+        printf("new uint64_t (0): %lu\n", field);
+        assert(field == 0);
+}
+
+void test_newu3()
+{
+        int64_t word = 53675;
+        unsigned width = 3;
+        unsigned lsb = 3;
+        uint64_t value = 6;
+        uint64_t field = Bitpack_newu(word, width, lsb, value);
+        printf("new uint64_t (53683): %lu\n", field);
+        assert(field == 53683);
+}
+
+void test_news()
+{
+        uint64_t word = 17;
+        unsigned width = 3;
+        unsigned lsb = 2;
+        int64_t value = 3;
+        uint64_t field = Bitpack_news(word, width, lsb, value);
+        printf("new int64_t (13): %ld\n", field);
+}
+
+void test_news2()
+{
+        uint64_t word = -20;
+        unsigned width = 5;
+        unsigned lsb = 5;
+        int64_t value = 10;
+        uint64_t field = Bitpack_news(word, width, lsb, value);
+        printf("new int64_t2 (-692): %ld\n", field);
+}
+
+void test_news3()
+{
+        uint64_t word = -9;
+        unsigned width = 3;
+        unsigned lsb = 0;
+        int64_t value = -2;
+        uint64_t field = Bitpack_news(word, width, lsb, value);
+        printf("new int64_t3 (-10): %ld\n", field);
+}
+
+void test_news4()
+{
+        uint64_t word = -17;
+        unsigned width = 4;
+        unsigned lsb = 0;
+        int64_t value = 7;
+        uint64_t field = Bitpack_news(word, width, lsb, value);
+        printf("new int64_t4 (-25): %ld\n", field);
+}
+
+void test_news5()
+{
+        uint64_t word = -123456;
+        unsigned width = 5;
+        unsigned lsb = 5;
+        int64_t value = -20;
+        uint64_t field = Bitpack_news(word, width, lsb, value);
+        printf("new int64_t5 (-123520): %ld\n", field);
+}
+
+void test_news6()
+{
+        uint64_t word = -500;
+        unsigned width = 7;
+        unsigned lsb = 1;
+        int64_t value = -20;
+        uint64_t field = Bitpack_news(word, width, lsb, value);
+        printf("new int64_t6 (-112): %ld\n", field);
+}
+
+/* SHOULD RESULT IN FAILED ASSERTION */
+void test_news7()
+{
+        uint64_t word = -123456;
+        unsigned width = 5;
+        unsigned lsb = 5;
+        int64_t value = -275;
+        uint64_t field = Bitpack_news(word, width, lsb, value);
+        printf("new int64_t5 (-15136): %ld\n", field);
+}
+
+void test_law1()
+{
+        uint64_t word = 500;
+        unsigned width = 5;
+        unsigned lsb = 1;
+        uint64_t value = 20;
+        uint64_t left = Bitpack_getu(Bitpack_newu(word, width, lsb, value), width, lsb);
+        uint64_t right = value;
+        printf("right: %ld, left: %ld\n", right, left);
+}
+
+void test_law2()
+{
+        uint64_t word = -500;
+        unsigned width = 5;
+        unsigned lsb = 1;
+        uint64_t value = -20;
+        uint64_t left = Bitpack_gets(Bitpack_news(word, width, lsb, value), width, lsb);
+        uint64_t right = value;
+        printf("right: %ld, left: %ld\n", right, left);
+}
+
+// void test_law2()
+// {
+//         //lsb2 >= w + lsb,
+//         uint64_t word = -500;
+//         unsigned width = 7;
+//         unsigned lsb = 1;
+//         int64_t value = -20;
+//         uint64_t left = getu(newu(word, width, lsb, value), width2, width + lsb); 
+//         uint64_t right = getu(word, width2, width + lsb);
+
+//         printf("right: %ld, left: %ld\n\n", right, left);
+// }
+
+void testPack()
+{
+        FILE* fp = fopen("ppm.ppm", "rb");
+
+        if (!fp) {
+                fprintf(stderr, 
+                        "One of the files provided couldn't be opened\n");
+                exit(EXIT_FAILURE);
+        }
+
+        A2Methods_T methods = uarray2_methods_plain; 
+        assert(methods != NULL);
+
+        A2Methods_mapfun *map = methods->map_default; 
+        assert(map != NULL);
+
+        Pnm_ppm image = readImagePpm(fp, methods);
+        fclose(fp);
+        assert(image);
+
+        A2Methods_UArray2 cv_image = rgb_to_cv(image, map, methods);
+
+        A2Methods_UArray2 wordImage = cv_to_DCT(cv_image, map, methods);
+
+        for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 10; j++) {
+                        code_word word = (code_word)methods->at(wordImage, j, i);
+                        unsigned a = word->a;
+                        signed b = word->b;
+                        signed c = word->c;
+                        signed d = word->d;
+                        unsigned pb = word->pb;
+                        unsigned pr = word->pr;
+                        printf("[%d][%d]\n", j, i);
+                        fprintf(stderr, "a: %u, b: %d, c: %d, d: %d, pb: %u, pr: %u\n",
+                                a, b, c, d, pb, pr);
+                }
+        }
+
+        A2Methods_UArray2 wordSequence = packWords(wordImage, map, methods);
+
+        for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 10; j++) {
+                        uint64_t *packed_word = methods->at(wordSequence, i, j);
+                        printf("Packed word at (%d, %d): %lu\n", i, j, *packed_word);
+                }
+        }
+
+        Pnm_ppmfree(&image);  
+        methods->free(&wordSequence);
+        methods->free(&wordImage);
 }

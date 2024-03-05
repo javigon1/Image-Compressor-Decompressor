@@ -1,6 +1,7 @@
 #include "calculations.h"
 #include "RGB_component.h"
 #include "CV_to_DCT.h"
+#include "bitpack.h"
 
 float roundValues(float value, float lower_range, float higher_range)
 {
