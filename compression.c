@@ -46,7 +46,7 @@ void decompress40(FILE *input)
         struct Pnm_ppm image;
         image = readHeaderImage(input, methods);
 
-        
+
 
         fprintf(stderr, "2\n");
 
