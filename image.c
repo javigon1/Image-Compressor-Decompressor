@@ -9,6 +9,8 @@
 
 #define BYTE_WIDTH 8
 
+#define DENOM 255
+
 
 #define A2M A2Methods_UArray2
 
@@ -97,8 +99,44 @@ void applyPrintWord(int col, int row, A2Methods_UArray2 UArray2, void *elem, voi
 }
 
 
+struct Pnm_ppm readHeaderImage(FILE *fp, A2Methods_T methods)
+{
+        unsigned height, width;
+        int read = fscanf(fp, "COMP40 Compressed image format 2\n%u %u", &width, &height);
+        assert(read == 2);
+        int c = getc(fp);
+        assert(c == '\n');
 
-// void printImagePpm(A2Methods_UArray2 codeword_array, A2Methods_T methods)
-// {
+        A2Methods_UArray2 image = methods->new(width, 
+                                               height,
+                                               sizeof(uint64_t));
 
-// }
+        
+
+        struct Pnm_ppm pixmap = { .width = width, .height = height,
+                                  .denominator = DENOM, .pixels = image,
+                                  .methods = methods
+        };
+
+        fprintf(stderr, "Width: %u\n", pixmap.width);
+        fprintf(stderr, "Height: %u\n", pixmap.height);
+
+        return pixmap;
+}
+
+
+void applyGetWord(int col, int row, A2Methods_UArray2 UArray2, void *elem, void *cl)
+{
+        (void)UArray2;
+        (void)col;
+        (void)row;
+        (void)cl;
+        // struct closure *closure = (struct closure *)cl;
+
+        uint64_t current_word = (uint64_t)elem;
+
+        putchar(Bitpack_getu(current_word, BYTE_WIDTH, INDEX0));
+        putchar(Bitpack_getu(current_word, BYTE_WIDTH, INDEX1));
+        putchar(Bitpack_getu(current_word, BYTE_WIDTH, INDEX2));
+        putchar(Bitpack_getu(current_word, BYTE_WIDTH, INDEX3));
+}
