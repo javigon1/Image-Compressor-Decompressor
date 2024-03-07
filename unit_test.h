@@ -1,5 +1,5 @@
-#include "RGB_component.h"
-#include "CV_to_DCT.h"
+#include "rgb_cv.h"
+#include "cv_dct.h"
 #include "bitpack.h"
 #include "calculations.h"
 #include "image.h"

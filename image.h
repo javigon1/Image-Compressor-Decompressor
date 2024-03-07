@@ -17,6 +17,10 @@
 #include "bitpack.h"
 #include "assert.h"
 
+
+extern Except_T Smaller_Than_2x2;
+
+
 /* CONTAINS THE INFORMATION WE'LL PASS AS A CLOSURE TO THE MAPPINGS */
 struct closure {
         A2Methods_T methods;
@@ -30,9 +34,5 @@ void printCompressedImage(A2Methods_UArray2 array, A2Methods_mapfun *map,
                           A2Methods_T methods);
 void applyPrintWord(int col, int row, A2Methods_UArray2 UArray2, void *elem, void *cl);
 A2Methods_UArray2 readCompressedImage(FILE *fp, A2Methods_T methods);
-// A2Methods_UArray2 readCompressedWords(A2Methods_UArray2 codeword_array, A2Methods_mapfun *map, 
-                                //       A2Methods_T methods);
-// void applyGetWord(int col, int row, A2Methods_UArray2 UArray2, void *elem, void *cl)
-
 
 #endif

@@ -4,7 +4,19 @@
 #include "assert.h"
 #include "compression.h"
 #include "image.h"
-#include "RGB_component.h"
+#include "rgb_cv.h"
+
+/****************************************************************************/
+
+/* CHECK FOR: 
+- less than 2x2 (WE ASSERT BUT HAVE SOME MEMORY STILL REACHABLE)
+- if less information than expected is provided to decompress 
+- Chekc that BItpack works fine for 64 bit words 
+- test more on bitpack 
+*/
+
+
+/****************************************************************************/
 
 static void (*compress_or_decompress)(FILE *input) = compress40;
 

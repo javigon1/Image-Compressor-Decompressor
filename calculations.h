@@ -8,8 +8,8 @@
 #include <math.h>
 #include <inttypes.h>
 #include "image.h"
-#include "RGB_component.h"
-#include "CV_to_DCT.h"
+#include "rgb_cv.h"
+#include "cv_dct.h"
 
 
 typedef struct {
@@ -24,7 +24,7 @@ typedef struct {
 
 float roundValues(float value, float lower_range, float higher_range);
 ChromaAverages computeAverageChromas(Pnm_ypbpr Cv_pixel1, Pnm_ypbpr Cv_pixel2, 
-                              Pnm_ypbpr Cv_pixel3, Pnm_ypbpr Cv_pixel4);
+                                     Pnm_ypbpr Cv_pixel3, Pnm_ypbpr Cv_pixel4);
 int64_t quantizeValues(float value, float range_limits);
 
 

@@ -1,7 +1,5 @@
 #include "calculations.h"
-#include "RGB_component.h"
-#include "CV_to_DCT.h"
-#include "bitpack.h"
+
 
 float roundValues(float value, float lower_range, float higher_range)
 {
@@ -11,16 +9,16 @@ float roundValues(float value, float lower_range, float higher_range)
 }
 
 
-ChromaAverages computeAverageChromas(Pnm_ypbpr Cv_pixel1, Pnm_ypbpr Cv_pixel2, 
-                              Pnm_ypbpr Cv_pixel3, Pnm_ypbpr Cv_pixel4)
+ChromaAverages computeAverageChromas(Pnm_ypbpr Cv1, Pnm_ypbpr Cv2, 
+                                     Pnm_ypbpr Cv3, Pnm_ypbpr Cv4)
 {
         ChromaAverages averages;
-        averages.avg_pb = (Cv_pixel1->pb + Cv_pixel2->pb + Cv_pixel3->pb + Cv_pixel4->pb) / 4.0;
-        averages.avg_pr = (Cv_pixel1->pr + Cv_pixel2->pr + Cv_pixel3->pr + Cv_pixel4->pr) / 4.0;
-        averages.a = (Cv_pixel4->y + Cv_pixel3->y + Cv_pixel2->y + Cv_pixel1->y) / 4.0;
-        averages.b = (Cv_pixel4->y + Cv_pixel3->y - Cv_pixel2->y - Cv_pixel1->y) / 4.0;
-        averages.c = (Cv_pixel4->y - Cv_pixel3->y + Cv_pixel2->y - Cv_pixel1->y) / 4.0;
-        averages.d = (Cv_pixel4->y - Cv_pixel3->y - Cv_pixel2->y + Cv_pixel1->y) / 4.0;
+        averages.avg_pb = (Cv1->pb + Cv2->pb + Cv3->pb + Cv4->pb) / 4.0;
+        averages.avg_pr = (Cv1->pr + Cv2->pr + Cv3->pr + Cv4->pr) / 4.0;
+        averages.a = (Cv4->y + Cv3->y + Cv2->y + Cv1->y) / 4.0;
+        averages.b = (Cv4->y + Cv3->y - Cv2->y - Cv1->y) / 4.0;
+        averages.c = (Cv4->y - Cv3->y + Cv2->y - Cv1->y) / 4.0;
+        averages.d = (Cv4->y - Cv3->y - Cv2->y + Cv1->y) / 4.0;
         return averages;
 }
 
