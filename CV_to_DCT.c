@@ -62,8 +62,8 @@ A2Methods_UArray2 DCT_to_cv(A2Methods_UArray2 DCT_image, A2Methods_mapfun *map,
         int height = (methods->height(DCT_image)) * 2;
 
         A2Methods_UArray2 cv_image = methods->new(width, 
-                                                 height,
-                                                 sizeof(struct Pnm_ypbpr));
+                                                  height,
+                                                  sizeof(struct Pnm_ypbpr));
 
         struct closure *cl = malloc(sizeof(*cl));
         cl->methods = methods;
@@ -88,16 +88,20 @@ void applyCv(int col, int row, A2Methods_UArray2 UArray2, void *elem, void *cl)
 
         (void)UArray2;
 
+        col *= 2;
+        row *= 2;
+
         Pnm_ypbpr ypbpr_pixel1 = (Pnm_ypbpr)closure->methods->at(closure->array, col, row);
         Pnm_ypbpr ypbpr_pixel2 = (Pnm_ypbpr)closure->methods->at(closure->array, col + 1, row);
         Pnm_ypbpr ypbpr_pixel3 = (Pnm_ypbpr)closure->methods->at(closure->array, col, row + 1);
         Pnm_ypbpr ypbpr_pixel4 = (Pnm_ypbpr)closure->methods->at(closure->array, col + 1, row + 1);
 
+
         /* CHECK FOR THESE VALUES FOR DIVISION */
         float a = ((float)(cw->a) / 511);
-        float b = ((float)(cw->b));
-        float c = ((float)(cw->c));
-        float d = ((float)(cw->d));
+        float b = ((float)(cw->b) / 50);
+        float c = ((float)(cw->c) / 50);
+        float d = ((float)(cw->d) / 50);
 
         ypbpr_pixel1->y = a - b - c + d;
         ypbpr_pixel2->y = a - b + c + d;
@@ -107,7 +111,7 @@ void applyCv(int col, int row, A2Methods_UArray2 UArray2, void *elem, void *cl)
         ypbpr_pixel1->pb = Arith40_chroma_of_index(cw->pb);
         ypbpr_pixel2->pb = Arith40_chroma_of_index(cw->pb);
         ypbpr_pixel3->pb = Arith40_chroma_of_index(cw->pb);
-        ypbpr_pixel3->pb = Arith40_chroma_of_index(cw->pb);
+        ypbpr_pixel4->pb = Arith40_chroma_of_index(cw->pb);
 
         ypbpr_pixel1->pr = Arith40_chroma_of_index(cw->pr);
         ypbpr_pixel2->pr = Arith40_chroma_of_index(cw->pr);
