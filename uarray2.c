@@ -1,14 +1,4 @@
-/*******************************************************************************
- *
- *                              usearray2.c
- *
- *     Assignment: iii
- *     Authors:  Luciano Galvani and Kieran Fergus 
- *     Date:     2/12/24
- *
- *     This file contains an implementation of the UArray2 class.
- *
- ******************************************************************************/
+
 
 #include "uarray2.h"
 #include "uarray.h"

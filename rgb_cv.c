@@ -4,7 +4,21 @@
 
 #define MAXVAL 255
 
-
+/*
+ * rgb_to_cv
+ * Description: Takes a UArray2 of Pnm_rgb structs and converts them to
+ *              component value structs (Pnm_ypbpr)
+ * Parameters:  Pnm_ppm image - struct containing UArray2 of Pnm_rgb struct
+ *              instances
+ *              A2Methods_mapfun *map - pointer to the default UArray2 mapping
+ *                                      function
+ *              A2Methods_T methods - UArray2 method suite
+ * Return:      a width x height UArray2 containing the component value struct
+ *              instances
+ * Expects:     image to not be NULL
+ * Notes:
+ *
+ */
 A2Methods_UArray2 rgb_to_cv(Pnm_ppm image, A2Methods_mapfun *map,
                             A2Methods_T methods)
 {
@@ -28,6 +42,23 @@ A2Methods_UArray2 rgb_to_cv(Pnm_ppm image, A2Methods_mapfun *map,
         return cv_image;
 }
 
+/*
+ * applyRGB
+ * Description: Takes a single Pnm_rgb struct and converts it to a component
+ *              value struct instance and puts it in the new UArray2
+ * Parameters:  int col, row - index of the current component value struct
+ *                             instance to populate
+ *              A2Methods_UArray2 UArray2 - unused
+ *              void* elem - pointer to the current Pnm_rgb struct to convert
+ *              void* cl - closure containing the UArray2 of component values
+ *                         to populate, the Maxval/denominator of the original
+ *                         .ppm image, and the UArray2 method suite
+ * Return:      none
+ * Expects:     col, row to be in range
+ *              *elem, *cl to not be NULL
+ * Notes:
+ *
+ */
 void applyRGB(int col, int row, A2Methods_UArray2 UArray2, void *elem, void *cl)
 {
         (void)UArray2;
@@ -50,7 +81,21 @@ void applyRGB(int col, int row, A2Methods_UArray2 UArray2, void *elem, void *cl)
         ypbpr_pix->pr = roundValues(pr, -0.5, 0.5);
 }
 
-
+/*
+ * cv_to_rgb
+ * Description: Takes a UArray2 of component value structs and converts them to
+ *              Pnm_rgb structs
+ * Parameters:  A2Methods_UArray2 image - struct containing UArray2 of component
+ *                                        value struct instances
+ *              A2Methods_mapfun *map - pointer to the default UArray2 mapping
+ *                                      function
+ *              A2Methods_T methods - UArray2 method suite
+ * Return:      Pnm_ppm struct, whose pixels field contains a UArray2 of Pnm_rgb
+ *              struct instances
+ * Expects:     image to not be NULL
+ * Notes:
+ *
+ */
 Pnm_ppm cv_to_rgb(A2Methods_UArray2 image, A2Methods_mapfun *map, A2Methods_T methods)
 {
         int width = methods->width(image);
@@ -83,7 +128,24 @@ Pnm_ppm cv_to_rgb(A2Methods_UArray2 image, A2Methods_mapfun *map, A2Methods_T me
         return rgb_image;
 }
 
-
+/*
+ * applyCV
+ * Description: Takes a single component value struct instance and converts it
+ *              to a Pnm_rgb struct and puts it in the new UArray2
+ * Parameters:  int col, row - index of the current Pnm_rgb struct instance to
+ *                             populate
+ *              A2Methods_UArray2 UArray2 - unused
+ *              void* elem - pointer to the current component value struct
+ *                           instance to convert
+ *              void* cl - closure containing the UArray2 of Pnm_rgb structs
+ *                         to populate, the Maxval/denominator of the original
+ *                         .ppm image, and the UArray2 method suite
+ * Return:      none
+ * Expects:     col, row to be in range
+ *              *elem, *cl to not be NULL
+ * Notes:
+ *
+ */
 void applyCV(int col, int row, A2Methods_UArray2 UArray2, void *elem, void *cl)
 {
         (void)UArray2;

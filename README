@@ -1,0 +1,123 @@
+Arith 
+Authors: Javi Gonzalez (jgonza20) and Kieran Fergus (kfergu01)
+Help Received: Several TA's 
+
+
+
+Architecture:
+
+The "U": 
+        ************************************************************************
+        **************************** .ppm Image ********************************
+        ************************************************************************
+
+                                         |
+                                         |
+                                        \|/
+
+        Compression:
+
+        1. 40image.c (call compress40 from command line)
+
+        2. compression.c (run compress40 function)
+
+        3. image.c - read the .ppm image from a pointer to the file given on the
+                     command line, populate the "pixels" field with a UArray2 of
+                     Pnm_rgb struct instances which contain the red, green, and
+                     blue values of each pixel in the image
+
+        4. rgb_cv.c - Converts the image with UArray2 of Pnm_rgb structs to a 
+                      UArray2 of component value struct instances 
+                      (struct Pnm_ypbpr) using the quantization formulas defined
+                      in the specification (implemented in calculations.c)
+
+
+        5. cv_dct.c - Converts the UArray2 of component value structs to a
+                      #columns/2 x #rows/2 sized UArray2 of "code_word" struct 
+                      instances (contains a, b, c, d, pb_avg, and pr_avg values 
+                      values of each 2x2 block of component value struct 
+                      instances) via discrete cosine transformation
+
+        6. packUnpack.c - Converts the UArray2 of code_word structs to a UArray2
+                          containing 32-bit code words in uint64_t's using the
+                          bitpack interface
+
+        7. image.c - Prints the image header and raster to stdout in big-endian
+                     order 
+
+                                         |
+                                         |
+                                        \|/
+
+        ************************************************************************
+        ************************ Compressed Image ******************************
+        ************************************************************************
+
+                                         |
+                                         |
+                                        \|/ 
+
+        Decompression:
+
+        1. 40image.c (call compress40from command line)
+
+        2. compression.c (run compress40 function)
+
+        3. image.c - read the compressed image (from a pointer to the file given 
+                     on the command line) into a UArray2 of 32-bit codewords
+                     stored in uint64_t's 
+
+        4. packUnpack.c - Converts the UArray2 of 32-bit codewords into a 
+                          UArray2 of "code_word" structs, using the bitpack 
+                          interface to unpack the values of the codewords into
+                          the a, b, c, d, pb_avg, pr_avg member values
+                          
+        5. cv_dct.c - Converts the UArray2 of "code_word" struct instances into
+                      a UArray2 of component value (Pnm_ypbpr) structs, with
+                      each 2x2 block of Pnm_ypbpr instances coming from a single
+                      code_word struct instance via inverse discrete cosine
+                      transformation
+
+        6. rgb_cv.c - Converts the UArray2 of component value (Pnm_ypbpr) struct
+                      instances into a UArray2 of Pnm_rgb struct instances 
+                      using the quantization formulas defined in the 
+                      specification (implemented in calculations.c). Puts the
+                      UArray2 of Pnm_rgb struct instances into the "pixels"
+                      field of a Pnm_ppm struct, which is returned
+                      
+        7. compression.c - Prints the decompressed .ppm image to stdout using 
+                           Pnm_ppmwrite as it is defined in pnm.h
+
+                                         |
+                                         |
+                                        \|/
+        
+        ************************************************************************
+        *********************** Decompressed .ppm Image ************************
+        ************************************************************************
+
+
+Correctly Implemented:
+        All functions in...
+                - 40image.c
+                - bitpack.c
+                - calculations.c
+                - compression.c
+                - cv_dct.c
+                - image.c
+                - packUnpack.c
+                - ppmdiff.c 
+                - rgb_cv.c
+        ...were unit tested and run with valgrind
+
+Incorrectly Implemented:
+        None
+
+
+Time spent analyzing problems: ~30 hours (including design, planning, debugging/ 
+                                          testing by printing + pen and paper,
+                                          unit testing, and running the whole
+                                          program)
+
+Time spent solving problems: ~10 hours (structuring, implementing, and
+                                        re-implementing following testing)

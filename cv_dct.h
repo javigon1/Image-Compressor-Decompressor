@@ -7,7 +7,8 @@
 #include "image.h"
 
 
-/* REPRESENTS THE 32bit PACKED WORD */
+/* represents the struct that is going to contain everything before packing it
+into a 32 bit word, or after unpacking such word */
 typedef struct code_word {
         uint64_t a;
         int64_t  b;

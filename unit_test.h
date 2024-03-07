@@ -311,8 +311,6 @@ void packUnpack()
         A2Methods_T methods = uarray2_methods_plain; 
         assert(methods != NULL);
 
-        fprintf(stderr, "1\n");
-
         A2Methods_mapfun *map = methods->map_default; 
         assert(map != NULL);
 
@@ -321,38 +319,20 @@ void packUnpack()
         assert(image);
 
         A2Methods_UArray2 cv_image = rgb_to_cv(image, map, methods);
-        
-        fprintf(stderr, "2\n");
 
         A2Methods_UArray2 wordImage = cv_to_DCT(cv_image, map, methods);
 
-         fprintf(stderr, "3\n");
-
         A2Methods_UArray2 packed = packWords(wordImage, map, methods);
-
-         fprintf(stderr, "4\n");
 
         A2Methods_UArray2 unpacked = unpackWords(packed, map, methods);
 
-         fprintf(stderr, "5\n");
-
         A2Methods_UArray2 back_to_cv = DCT_to_cv(unpacked, map, methods);
-        
-         fprintf(stderr, "6\n");
 
         Pnm_ppm rgb_image = cv_to_rgb(back_to_cv, map, methods);
 
-         fprintf(stderr, "7\n");
-
         Pnm_ppmwrite(stdout, rgb_image);
-        
-        fprintf(stderr, "8\n");
 
-        // Pnm_ppmfree(&image);  
-        // methods->free(&back_to_cv);
-        // methods->free(&wordImage);
-        // methods->free(&packed);
-        // methods->free(&unpacked);
+        /* we don't care about freeing here */
 }
 
 
@@ -361,7 +341,6 @@ void testShifts()
         uint64_t test_u = 0x3f4;
         int64_t test_s = 0x3f4;
         unsigned width = 11;
-        // unsigned lsb = 2;
 
         printf("Value unsigned: %lu\n", test_u);
         printf("Value unsigned: %ld\n", test_s);
@@ -592,13 +571,37 @@ void test_pack()
         printf("Value2: %lu\n", field2);
         printf("Value3: %lu\n", field3);
         printf("Value4: %lu\n", field4);
-
-        print_uint64_binary(field);
-        print_uint64_binary(field2);
-        print_uint64_binary(field3);
-        print_uint64_binary(field4);
-
 }
+
+
+void test_multiple_changes()
+{
+    uint64_t word = 14585;
+    unsigned width = 7;
+    unsigned lsb = 0;
+    int64_t value = 67;
+    uint64_t field = Bitpack_newu(word, width, lsb, value);
+    uint64_t FIELD = Bitpack_getu(field, width + 1, lsb);
+    printf("get uint64_t (195): %lu\n", FIELD);
+    uint64_t field2 = Bitpack_newu(field, 6, 1, 42); 
+    uint64_t field3 = Bitpack_newu(field2, 5, 3, 12); 
+    printf("new uint64_t (): %lu\n", field3);
+}
+
+
+
+void test_multiple_changes2()
+{
+        uint64_t word = 14585;
+        unsigned width = 8;
+        unsigned lsb = 0;
+        int64_t value = 67;
+        uint64_t field = Bitpack_news(word, width, lsb, value); 
+        uint64_t field2 = Bitpack_news(field, 8, 1, -17);
+        uint64_t field3 = Bitpack_news(field2, 3, 1, 2);
+        printf("new uint64_t (14805): %lu\n", field3);
+}
+
 
 void test_news3()
 {

@@ -21,7 +21,8 @@
 extern Except_T Smaller_Than_2x2;
 
 
-/* CONTAINS THE INFORMATION WE'LL PASS AS A CLOSURE TO THE MAPPINGS */
+/* struct that contains all of the information that will get passed on as 
+useful information */
 struct closure {
         A2Methods_T methods;
         A2Methods_UArray2 *array;

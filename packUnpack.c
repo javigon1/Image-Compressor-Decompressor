@@ -16,14 +16,26 @@
 #define WIDTH_PB 4
 #define WIDTH_PR 4
 
-
+/*
+ * packWords
+ * Description: packs the member values of a code_word struct into a 32-bit
+ *              uint64_t
+ * Parameters:  A2Methods_UArray2 DCT_image - UArray2 of code_word struct
+ *                                            instances
+ *              A2Methods_mapfun *map - pointer to default mapping function
+ *              A2Methods_T methods - UArray2 method suite
+ * Return:      UArray2 of 32-bit codewords
+ * Expects:     DCT_image to not be NULL
+ * Notes:
+ *
+ */
 A2Methods_UArray2 packWords(A2Methods_UArray2 DCT_image, A2Methods_mapfun *map, 
                             A2Methods_T methods)
 {
         int width = methods->width(DCT_image);
         int height = methods->height(DCT_image);
 
-
+        /* created a new UAray2 to store the uint64_t's */
         A2Methods_UArray2 codeword_array = methods->new(width, 
                                                         height,
                                                         sizeof(uint64_t));
@@ -33,6 +45,7 @@ A2Methods_UArray2 packWords(A2Methods_UArray2 DCT_image, A2Methods_mapfun *map,
         cl->methods = methods;
         cl->array = codeword_array;
 
+        /* pack each word */
         map(DCT_image, applyPack, cl);
 
         if(cl) {
@@ -43,7 +56,21 @@ A2Methods_UArray2 packWords(A2Methods_UArray2 DCT_image, A2Methods_mapfun *map,
         return codeword_array;
 }
 
-
+/*
+ * applyPack
+ * Description: packs the member values of a code_word struct into a 32-bit
+ *              uint64_t
+ * Parameters:  int col, int row - current index in code_word struct array
+ *              A2Methods_UArray2 UArray2 - unused
+ *              void *elem - pointer to the current code_word struct instance
+ *              void *cl - closure containing the UArray2 to hold the 32-bit
+ *                         uint64_t codewords, and the UArray2 method suite
+ * Return:      none
+ * Expects:     col, row to be in range
+ *              *cl, *elem to not be NULL
+ * Notes:
+ *
+ */
 void applyPack(int col, int row, A2Methods_UArray2 UArray2, void *elem, void *cl)
 {
         (void)UArray2;
@@ -60,7 +87,18 @@ void applyPack(int col, int row, A2Methods_UArray2 UArray2, void *elem, void *cl
         *new_word = Bitpack_newu(*new_word, WIDTH_PR, LSB_PR, codeword->pr);
 }
 
-
+/*
+ * unpackWords
+ * Description: unpacks the member values of a code_word struct from a 32-bit
+ *              uint64_t
+ * Parameters:  A2Methods_UArray2 codeword_array - UArray2 of 32-bit codewords
+ *              A2Methods_mapfun *map - pointer to default mapping function
+ *              A2Methods_T methods - UArray2 method suite
+ * Return:      UArray2 of code_word struct instances
+ * Expects:     codeword_array to not be NULL
+ * Notes:
+ *
+ */
 A2Methods_UArray2 unpackWords(A2Methods_UArray2 codeword_array, A2Methods_mapfun *map, 
                               A2Methods_T methods)
 {
@@ -86,7 +124,20 @@ A2Methods_UArray2 unpackWords(A2Methods_UArray2 codeword_array, A2Methods_mapfun
         return DCT_image;
 }
 
-
+/*
+ * applyUnpack
+ * Description: unpacks a single 32-bit codeword into a code_word struct
+ * Parameters:  int col, int row - current index in 32-bit codeword array
+ *              A2Methods_UArray2 UArray2 - unused
+ *              void *elem - pointer to the current 32-bit codeword
+ *              void *cl - closure containing the UArray2 to hold the code_word
+ *                         struct, and the UArray2 method suite
+ * Return:      none
+ * Expects:     col, row to be in range
+ *              *cl, *elem to not be NULL
+ * Notes:
+ *
+ */
 void applyUnpack(int col, int row, A2Methods_UArray2 UArray2, void *elem, void *cl)
 {
         (void)UArray2;

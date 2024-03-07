@@ -12,6 +12,8 @@
 #include "cv_dct.h"
 
 
+/* struct that is going to contain the information that gets stored in the 
+packed word */
 typedef struct {
         float a;
         float b;
